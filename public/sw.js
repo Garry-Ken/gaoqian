@@ -1,5 +1,8 @@
-// 搞钱局 — minimal offline-first service worker (hand-rolled, no build step).
-const CACHE = 'gaoqian-v1'
+// 搞钱局 — offline-capable service worker (hand-rolled).
+// Key rule: NEVER serve a stale index.html. HTML/navigations are network-first
+// (so a redeploy's fresh HTML — with new hashed asset names — always wins);
+// hashed assets are cache-first (immutable); Supabase/API always hit network.
+const CACHE = 'gaoqian-v2'
 const APP_SHELL = ['./', './index.html', './manifest.webmanifest', './icon.svg']
 
 self.addEventListener('install', (e) => {
@@ -19,24 +22,29 @@ self.addEventListener('fetch', (e) => {
   if (req.method !== 'GET') return
   const url = new URL(req.url)
 
-  // Never cache Supabase / API traffic — always go to network.
-  if (url.hostname.endsWith('supabase.co') || url.pathname.startsWith('/rest') || url.pathname.startsWith('/auth')) {
+  // Never touch Supabase / API traffic.
+  if (url.hostname.endsWith('supabase.co') || url.pathname.startsWith('/rest') || url.pathname.startsWith('/auth')) return
+
+  const isDoc = req.mode === 'navigate' || req.destination === 'document' || url.pathname.endsWith('/') || url.pathname.endsWith('index.html')
+
+  if (isDoc) {
+    // network-first: always try to get the freshest HTML.
+    e.respondWith(
+      fetch(req)
+        .then((res) => { caches.open(CACHE).then((c) => c.put('./index.html', res.clone())).catch(() => {}); return res })
+        .catch(() => caches.match(req).then((c) => c || caches.match('./index.html'))),
+    )
     return
   }
 
-  // App assets: stale-while-revalidate.
+  // hashed assets: cache-first, revalidate in background.
   e.respondWith(
     caches.match(req).then((cached) => {
-      const network = fetch(req)
-        .then((res) => {
-          if (res && res.status === 200 && res.type === 'basic') {
-            const copy = res.clone()
-            caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => {})
-          }
-          return res
-        })
-        .catch(() => cached)
-      return cached || network
+      const net = fetch(req).then((res) => {
+        if (res && res.status === 200 && res.type === 'basic') caches.open(CACHE).then((c) => c.put(req, res.clone())).catch(() => {})
+        return res
+      }).catch(() => cached)
+      return cached || net
     }),
   )
 })
