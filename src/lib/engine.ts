@@ -124,23 +124,24 @@ export function computeStats(
   const trimmed = series.slice(-SERIES_MONTHS)
 
   // ---- breakthroughs (非线性爆发) ----
+  // A breakthrough is a month that's ≥2× your recent REAL earning baseline.
+  // The first earning month has no baseline → it's a starting point, not a 爆发.
   const breakthroughs: Breakthrough[] = []
   for (let i = 0; i < trimmed.length; i++) {
     const cur = trimmed[i]
     if (cur.income < 10000) continue
-    const prior = trimmed.slice(Math.max(0, i - 3), i).map((p) => p.income)
-    const baseline = Math.max(MONTH_FLOOR, median(prior))
+    const priorReal = trimmed.slice(Math.max(0, i - 3), i).map((p) => p.income).filter((x) => x > 0)
+    if (priorReal.length === 0) continue
+    const baseline = Math.max(MONTH_FLOOR, median(priorReal))
     const multiple = cur.income / baseline
+    if (multiple < 2) continue
     const prevTierMax = Math.max(0, ...trimmed.slice(Math.max(0, i - 2), i).map((p) => p.tierIndex))
-    const tierJump = cur.tierIndex - prevTierMax
-    if (multiple >= 2 || tierJump >= 1) {
-      cur.isBreakthrough = true
-      breakthroughs.push({
-        monthKey: cur.key, amount: cur.income, multiple: Math.round(multiple * 10) / 10,
-        tierJump: Math.max(0, tierJump),
-        label: multiple >= 2 ? `🔥 ${Math.round(multiple * 10) / 10}倍爆发` : `⬆️ 跨 ${tierJump} 段`,
-      })
-    }
+    const tierJump = Math.max(0, cur.tierIndex - prevTierMax)
+    cur.isBreakthrough = true
+    breakthroughs.push({
+      monthKey: cur.key, amount: cur.income, multiple: Math.round(multiple * 10) / 10, tierJump,
+      label: `🔥 ${Math.round(multiple * 10) / 10}倍爆发`,
+    })
   }
 
   // ---- streaks ----
