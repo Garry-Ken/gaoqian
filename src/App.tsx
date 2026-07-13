@@ -84,12 +84,14 @@ function Shell() {
         {tab === 'me' && <Me onOpenProfile={openProfile} onShare={() => setShareOpen(true)} />}
       </main>
 
-      {/* FAB */}
-      <button onClick={() => setLogOpen(true)}
-        className="fixed z-40 bottom-24 right-1/2 translate-x-[172px] max-[420px]:right-5 max-[420px]:translate-x-0 w-14 h-14 rounded-full btn-gold flex items-center justify-center text-2xl shadow-glow tap"
-        aria-label="记一笔">
-        <IconPlus />
-      </button>
+      {/* FAB — hidden on 榜单 (collides with the sticky my-rank bar) */}
+      {tab !== 'rank' && (
+        <button onClick={() => setLogOpen(true)}
+          className="fixed z-40 bottom-24 right-1/2 translate-x-[172px] max-[420px]:right-4 max-[420px]:translate-x-0 w-14 h-14 rounded-full btn-gold flex items-center justify-center text-2xl shadow-glow tap"
+          aria-label="记一笔">
+          <IconPlus />
+        </button>
+      )}
 
       {/* tab bar */}
       <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md z-30 glass border-t hairline safe-bottom">

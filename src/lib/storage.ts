@@ -37,7 +37,7 @@ export const KEYS = {
   entries: 'me.entries.v1',
   metrics: 'me.metrics.v1',
   metricPoints: 'me.metricPoints.v1',
-  seeded: 'world.seeded.v3',
+  seeded: 'world.seeded.v4',
   theme: 'pref.theme.v1',
   onboarded: 'pref.onboarded.v1',
 } as const

@@ -1,5 +1,5 @@
 import type { Profile, Team, MeetEvent, FeedItem, Endorsement, Comment } from '../types'
-import { tierForIncome } from './tiers'
+import { tierForIncome, tierById } from './tiers'
 import { seededRng, pick, range } from './id'
 import { wan } from './format'
 
@@ -149,7 +149,7 @@ export function buildWorld(now: Date): World {
   // events (同城局) — future-dated relative to now
   const evTags = ['饭局', '项目对接', '复盘会', '资源交换', '认知碰撞', '合伙搭子']
   const evTitles = [
-    '搞钱局 · 深圳周五夜谈', '独立开发者线下复盘', '跨境电商选品交流饭局', '内容创作者选题碰撞局',
+    '搞钱局 · 周五夜谈', '独立开发者线下复盘', '跨境电商选品交流饭局', '内容创作者选题碰撞局',
     '副业变现经验交换', '一人公司的100种活法', 'AI 工具变现闭门会', '本月冲榜庆功局',
     '投资与现金流茶话会', '新手上路 · 破晓局', '出海项目找搭子', '设计师接单资源局',
   ]
@@ -185,7 +185,7 @@ export function buildWorld(now: Date): World {
       text = `本月爆发！单月冲到 ${wan(actor.snapMonthIncome ?? 0)}，${Math.round(1.5 + rng() * 3)}倍于上月`
     } else if (roll < 0.7) {
       kind = 'rankup'; tierId = actor.snapCurrentTier
-      text = `升段了！晋级「${actor.snapCurrentTier}」`
+      text = `升段了！晋级「${tierById(actor.snapCurrentTier ?? 't0').name}」`
     } else if (roll < 0.85) {
       kind = 'venture'; text = `开了个新副本：${pick(rng, ['做一个AI小工具', '开始做小红书', '接了个跨境单', '上架了新产品', '试水直播带货'])}`
     } else {

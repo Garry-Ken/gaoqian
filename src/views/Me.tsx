@@ -31,7 +31,7 @@ export function Me({ onOpenProfile, onShare }: { onOpenProfile: (id: string) => 
             <div className="text-sm text-muted">{me.city ?? '未设置城市'} · 入局 {Math.max(1, Math.round((store.now.getTime() - +new Date(me.joinedAt)) / 86400000))} 天</div>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={onShare} className="tap px-3 h-9 rounded-full btn-gold text-sm font-semibold flex items-center gap-1">📸 战报</button>
+            <button onClick={onShare} aria-label="晒战报" className="tap w-9 h-9 rounded-full btn-gold flex items-center justify-center text-base">📸</button>
             <button onClick={() => setSettings(true)} className="tap w-9 h-9 rounded-full bg-subtle flex items-center justify-center text-muted"><IconGear /></button>
           </div>
         </div>

@@ -8,7 +8,7 @@ import { Sheet, Button } from './ui'
 import { IconCheck, IconLink } from './icons'
 
 const W = 1080
-const H = 1500
+const H = 1600
 
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
@@ -21,7 +21,7 @@ export function buildCardSVG(p: Profile, s: PlayerStats): string {
 
   // wealth curve
   const series = s.monthlySeries
-  const cx0 = 120, cy0 = 1238, cw = 840, ch = 132
+  const cx0 = 120, cy0 = 1240, cw = 840, ch = 108
   let curve = ''
   let dots = ''
   if (series.length > 1) {
@@ -48,9 +48,9 @@ export function buildCardSVG(p: Profile, s: PlayerStats): string {
   const tW = 300
   const titleSvg = titles.map((m, i) => {
     const x = W / 2 - (titles.length * tW) / 2 + i * tW + 12
-    return `<g transform="translate(${x},1408)">
-      <rect width="${tW - 24}" height="60" rx="30" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)"/>
-      <text x="${(tW - 24) / 2}" y="39" text-anchor="middle" font-size="28" fill="#e7e7ea">${m!.emoji} ${esc(m!.name)}</text></g>`
+    return `<g transform="translate(${x},1404)">
+      <rect width="${tW - 24}" height="62" rx="31" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)"/>
+      <text x="${(tW - 24) / 2}" y="40" text-anchor="middle" font-size="28" fill="#e7e7ea">${m!.emoji} ${esc(m!.name)}</text></g>`
   }).join('')
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="-apple-system, 'PingFang SC', 'Segoe UI', system-ui, sans-serif">
@@ -106,9 +106,9 @@ export function buildCardSVG(p: Profile, s: PlayerStats): string {
   ${titleSvg}
 
   <!-- footer -->
-  <line x1="72" y1="1412" x2="1008" y2="1412" stroke="rgba(255,255,255,0.08)"/>
-  <text x="72" y="1464" font-size="30" font-weight="700" fill="#fff">🎲 一起搞钱</text>
-  <text x="1008" y="1464" text-anchor="end" font-size="26" fill="rgba(255,255,255,0.4)">搜索「搞钱局」· 真实记录你的财富段位</text>
+  <line x1="72" y1="1502" x2="1008" y2="1502" stroke="rgba(255,255,255,0.08)"/>
+  <text x="72" y="1556" font-size="30" font-weight="700" fill="#fff">🎲 一起搞钱</text>
+  <text x="1008" y="1556" text-anchor="end" font-size="26" fill="rgba(255,255,255,0.4)">搜索「搞钱局」· 真实记录你的财富段位</text>
 </svg>`
 }
 
