@@ -56,7 +56,7 @@ function Shell() {
   const openProfile = (id: string) => setProfileId(id)
 
   return (
-    <div className="min-h-full flex flex-col max-w-md mx-auto w-full relative">
+    <div className="app-shell min-h-screen flex flex-col max-w-md mx-auto w-full relative">
       {/* top bar */}
       <header className="sticky top-0 z-30 glass safe-top">
         <div className="flex items-center justify-between px-4 py-2.5">

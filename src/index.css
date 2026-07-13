@@ -60,12 +60,26 @@ body,
 
 body {
   margin: 0;
-  background: rgb(var(--canvas));
+  /* Ambient glows fill the gutter on wide (网页端) screens; barely visible on mobile. */
+  background:
+    radial-gradient(55vw 46vh at 12% -6%, rgb(var(--accent) / 0.12), transparent 60%),
+    radial-gradient(52vw 46vh at 100% 106%, rgb(var(--gold) / 0.10), transparent 60%),
+    rgb(var(--canvas));
+  background-attachment: fixed;
   color: rgb(var(--fg));
   font-family: theme('fontFamily.sans');
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overscroll-behavior-y: none;
+}
+
+/* On desktop, delineate the phone-width app column so it reads as an intentional surface. */
+@media (min-width: 768px) {
+  .app-shell {
+    border-left: 1px solid var(--hairline);
+    border-right: 1px solid var(--hairline);
+    box-shadow: 0 0 80px rgba(0, 0, 0, 0.4);
+  }
 }
 
 /* Tabular, aligned numerals for money / stats */
